@@ -66,13 +66,13 @@ import data from './data.js';
 
     const thead = document.createElement('thead');
     thead.insertAdjacentHTML('beforeend', `
-            <tr>
-                <th class='delete'>Удалить</th>
-                <th>Имя</th>
-                <th>Фамилия</th>
-                <th>Номер телефона</th>
-            </tr>
-        `);
+      <tr>
+        <th class='delete'>Удалить</th>
+        <th>Имя</th>
+        <th>Фамилия</th>
+        <th>Номер телефона</th>
+      </tr>
+    `);
 
     const tbody = document.createElement('tbody');
     table.append(thead, tbody);
@@ -88,21 +88,21 @@ import data from './data.js';
     const form = document.createElement('form');
     form.classList.add('form');
     form.insertAdjacentHTML('beforeend', `
-            <button class='close' type='button'></button>
-            <h2 class='form-title'>Добавить контакт</h2>
-            <div class='form-group'>
-                <label class='form-label' for='name'>Имя:</label>
-                <input class='form-input' name='name' id='name' type='text' required>
-            </div>
-            <div class='form-group'>
-                <label class='form-label' for='surname'>Фамилия:</label>
-                <input class='form-input' name='surname' id='surname' type='text' required>
-            </div>
-            <div class='form-group'>
-                <label class='form-label' for='phone'>Телефон:</label>
-                <input class='form-input' name='phone' id='phone' type='number' required>
-            </div>
-        `);
+      <button class='close' type='button'></button>
+      <h2 class='form-title'>Добавить контакт</h2>
+      <div class='form-group'>
+        <label class='form-label' for='name'>Имя:</label>
+        <input class='form-input' name='name' id='name' type='text' required>
+      </div>
+      <div class='form-group'>
+        <label class='form-label' for='surname'>Фамилия:</label>
+        <input class='form-input' name='surname' id='surname' type='text' required>
+      </div>
+      <div class='form-group'>
+        <label class='form-label' for='phone'>Телефон:</label>
+        <input class='form-input' name='phone' id='phone' type='number' required>
+      </div>
+    `);
 
     const buttonGroup = createButtonsGroup([
       {
@@ -163,16 +163,27 @@ import data from './data.js';
     main.mainContainer.append(buttonGroup.btnWrapper, table, form.overlay);
     app.append(header, main, footer);
 
-    return {
-      list: table.tbody,
-    };
+  return {
+    list: table.tbody,
+    logo,
+    btnAdd: buttonGroup.btns[0],
+    formOverlay: form.overlay,
+    form: form.form,
+  };
   };
 
   const createRow = ({name: firstName, surname, phone}) => {
     const tr = document.createElement('tr');
 
+    const tdEdit = document.createElement('button');
+    tdEdit.textContent = 'Редактировать';
+    tdEdit.style.padding = '0';
+    tdEdit.style.border = '0';
+    tdEdit.style.background = 'transparent';
+
     const tdDel = document.createElement('td');
     tdDel.classList.add('delete');
+    console.log(tdDel);
 
     const buttonDel = document.createElement('button');
     buttonDel.classList.add('del-icon');
@@ -188,9 +199,10 @@ import data from './data.js';
     const phoneLink = document.createElement('a');
     phoneLink.href = `tel:${phone}`;
     phoneLink.textContent = phone;
+    tr.phoneLink = phoneLink;
     tdPhone.append(phoneLink);
 
-    tr.append(tdDel, tdName, tdSurname, tdPhone);
+    tr.append(tdDel, tdName, tdSurname, tdPhone, tdEdit);
 
     return tr;
   };
@@ -198,14 +210,42 @@ import data from './data.js';
   const renderContacts = (elem, data) => {
     const allRow = data.map(createRow);
     elem.append(...allRow);
+    return allRow;
+  };
+
+  const hoverRow = (allRow, logo) => {
+    const text = logo.textContent;
+    allRow.forEach(contact => {
+      contact.addEventListener('mouseenter', () => {
+        logo.textContent = contact.phoneLink.textContent;
+      });
+      contact.addEventListener('mouseleave', () => {
+        logo.textContent = text;
+      });
+    });
   };
 
   const init = (selectorApp, title) => {
     const app = document.querySelector(selectorApp);
     const phoneBook = renderPhoneBook(app, title);
-    const {list} = phoneBook;
+    const {list, logo, btnAdd, formOverlay, form} = phoneBook;
 
-    renderContacts(list, data);
+    const allRow = renderContacts(list, data);
+    hoverRow(allRow, logo);
+
+    btnAdd.addEventListener('click', () => {
+      formOverlay.classList.add('is-visible');
+    });
+
+    form.addEventListener('click', (e) => {
+      e.stopPropagation();
+    })
+
+    formOverlay.addEventListener('click', () => {
+      formOverlay.classList.remove('is-visible');
+    });
+
+
   };
 
   window.phoneBookInit = init;
