@@ -3,6 +3,10 @@
 import data from './data.js';
 
 {
+  const addContactData = (contact) => {
+    data.push(contact);
+  };
+
   // Создать контейнер для создания любой секции на странице
   const createContainer = () => {
     const container = document.createElement('div');
@@ -168,10 +172,10 @@ import data from './data.js';
       },
     ]);
     const table = createTable();
-    const form = createForm();
+    const {form, overlay} = createForm();
 
     header.headerContainer.append(logo);
-    main.mainContainer.append(buttonGroup.btnWrapper, table, form.overlay);
+    main.mainContainer.append(buttonGroup.btnWrapper, table, overlay);
     app.append(header, main, footer);
 
   return {
@@ -179,8 +183,8 @@ import data from './data.js';
     logo,
     btnAdd: buttonGroup.btns[0],
     btnDel: buttonGroup.btns[1],
-    formOverlay: form.overlay,
-    form: form.form,
+    formOverlay: overlay,
+    form,
   };
   };
 
@@ -257,18 +261,72 @@ import data from './data.js';
     });
   };
 
+  const modalControl = (btnAdd, formOverlay) => {
+    const openModal = () => {
+      formOverlay.classList.add('is-visible');
+    };
+
+    const closeModal = () => {
+      formOverlay.classList.remove('is-visible');
+    };
+
+    btnAdd.addEventListener('click', openModal);
+
+    formOverlay.addEventListener('click', (e) => {
+      const target = e.target;
+      if (target == formOverlay ||
+          target.classList.contains('close')) {
+        closeModal();
+      }
+    });
+
+    return {
+      closeModal,
+    };
+  };
+
+  const deleteControl = (btnDel, list) => {
+    btnDel.addEventListener('click', () => {
+      document.querySelectorAll('.delete').forEach(del => {
+        del.classList.toggle('is-visible');
+      });
+    });
+
+    list.addEventListener('click', (e) => {
+      const target = e.target;
+      if (target.closest('.del-icon')) {
+        target.closest('.contact').remove();
+      }
+    });
+  };
+
+  const addContactPage = (contact, list) => {
+    list.append(createRow(contact));
+  }
+
+  const formControl = (form, list, closeModal) => {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      const newContact = Object.fromEntries(formData);
+      addContactPage(newContact, list);
+      addContactData(newContact);
+      form.reset();
+      closeModal();
+    });
+  };
+
   // Инициализация телефонного справочника
   const init = (selectorApp, title) => {
     const app = document.querySelector(selectorApp);
-    const phoneBook = renderPhoneBook(app, title);
     const {
       list,
       logo,
       btnAdd,
       btnDel,
-      formOverlay
-      //form
-    } = phoneBook;
+      formOverlay,
+      form
+    } = renderPhoneBook(app, title);
 
     const buttonSortedForName = document.querySelector('.button-name');
     const buttonSortedForSurname = document.querySelector('.button-surname');
@@ -288,32 +346,12 @@ import data from './data.js';
     });
 
     const allRow = renderContacts(list, data);
+    const {closeModal} = modalControl(btnAdd, formOverlay);
+
     hoverRow(allRow, logo);
-
-    btnAdd.addEventListener('click', () => {
-      formOverlay.classList.add('is-visible');
-    });
-
-    formOverlay.addEventListener('click', (e) => {
-      const target = e.target;
-      if (target == formOverlay ||
-          target.classList.contains('close')) {
-        formOverlay.classList.remove('is-visible');
-      }
-    });
-
-    btnDel.addEventListener('click', () => {
-      document.querySelectorAll('.delete').forEach(del => {
-        del.classList.toggle('is-visible');
-      });
-    });
-
-    list.addEventListener('click', (e) => {
-      const target = e.target;
-      if (target.closest('.del-icon')) {
-        target.closest('.contact').remove();
-      }
-    });
+    deleteControl(btnDel, list);
+    formControl(form, list, closeModal);
+    
 
     // setTimeout(() => {
     //   const contact = createRow({
