@@ -3,6 +3,7 @@
 import data from './data.js';
 
 {
+  // Создать контейнер для создания любой секции на странице
   const createContainer = () => {
     const container = document.createElement('div');
     container.classList.add('container');
@@ -10,6 +11,7 @@ import data from './data.js';
     return container;
   };
 
+  // Создать контейнер-хэдер и сам хэдер
   const createHeader = () => {
     const header = document.createElement('header');
     header.classList.add('header');
@@ -21,6 +23,7 @@ import data from './data.js';
     return header;
   };
 
+  // Создать логотип, в названии которого имя пользователя при инициализации 
   const createLogo = (title) => {
     const h1 = document.createElement('h1');
     h1.classList.add('logo');
@@ -29,6 +32,7 @@ import data from './data.js';
     return h1;
   };
 
+  // Создать контейнер-мэйн и сам мэйн
   const createMain = () => {
     const main = document.createElement('main');
     const mainContainer = createContainer();
@@ -39,10 +43,13 @@ import data from './data.js';
     return main;
   };
 
+  // Создать группу кнопок
   const createButtonsGroup = (params) => {
+    // Создать контейнер с кнопками
     const btnWrapper = document.createElement('div');
     btnWrapper.classList.add('btn-wrapper');
 
+    // При создании новой кнопки указываются параметры:
     const btns = params.map(({className, type, text}) => {
       const button = document.createElement('button');
       button.className = className;
@@ -60,6 +67,7 @@ import data from './data.js';
     };
   };
 
+  // Создать верстку таблицы и названия ячеек
   const createTable = () => {
     const table = document.createElement('table');
     table.classList.add('table', 'table-striped');
@@ -68,8 +76,8 @@ import data from './data.js';
     thead.insertAdjacentHTML('beforeend', `
       <tr>
         <th class='delete'>Удалить</th>
-        <th>Имя</th>
-        <th>Фамилия</th>
+        <th class='button-name'>Имя</th>
+        <th class='button-surname'>Фамилия</th>
         <th>Номер телефона</th>
       </tr>
     `);
@@ -81,6 +89,7 @@ import data from './data.js';
     return table;
   };
 
+  // Создать форму и верстку формы для добьавления нового контакта пользователем
   const createForm = () => {
     const overlay = document.createElement('div');
     overlay.classList.add('form-overlay');
@@ -126,6 +135,7 @@ import data from './data.js';
     };
   };
 
+  // Создать контейнер-футер
   const createFooter = () => {
     const footer = document.createElement('footer');
     const footerContainer = createContainer();
@@ -139,6 +149,7 @@ import data from './data.js';
     return footer;
   };
 
+  // Создать страницу; вызвать функции, создающие элементы
   const renderPhoneBook = (app, title) => {
     const header = createHeader();
     const logo = createLogo(title);
@@ -167,23 +178,27 @@ import data from './data.js';
     list: table.tbody,
     logo,
     btnAdd: buttonGroup.btns[0],
+    btnDel: buttonGroup.btns[1],
     formOverlay: form.overlay,
     form: form.form,
   };
   };
 
+  // Создать строки контактов в таблице
   const createRow = ({name: firstName, surname, phone}) => {
     const tr = document.createElement('tr');
+    tr.classList.add('contact');
 
     const tdEdit = document.createElement('button');
+    tdEdit.style.cssText = `
+      padding: 0;
+      border: 0;
+      background: transparent
+    `;
     tdEdit.textContent = 'Редактировать';
-    tdEdit.style.padding = '0';
-    tdEdit.style.border = '0';
-    tdEdit.style.background = 'transparent';
 
     const tdDel = document.createElement('td');
     tdDel.classList.add('delete');
-    console.log(tdDel);
 
     const buttonDel = document.createElement('button');
     buttonDel.classList.add('del-icon');
@@ -191,9 +206,11 @@ import data from './data.js';
 
     const tdName = document.createElement('td');
     tdName.textContent = firstName;
+    tdName.classList.add('firstName');
 
     const tdSurname = document.createElement('td');
     tdSurname.textContent = surname;
+    tdSurname.classList.add('surname');
 
     const tdPhone = document.createElement('td');
     const phoneLink = document.createElement('a');
@@ -207,12 +224,14 @@ import data from './data.js';
     return tr;
   };
 
+  // Добавить контакты из имеющегося массива
   const renderContacts = (elem, data) => {
     const allRow = data.map(createRow);
     elem.append(...allRow);
     return allRow;
   };
 
+  // Показать телефон контакта при наведении мыши
   const hoverRow = (allRow, logo) => {
     const text = logo.textContent;
     allRow.forEach(contact => {
@@ -225,10 +244,48 @@ import data from './data.js';
     });
   };
 
+  // Отсортировать в алфавитном порядке контакты
+  const phoneSorted = (arr, key) => {
+    arr.sort((a, b) => {
+      if (a[key].toLowerCase() < b[key].toLowerCase()) {
+        return -1;
+      }
+      if (a[key].toLowerCase() > b[key].toLowerCase()) {
+        return 1;
+      }
+      return 0;
+    });
+  };
+
+  // Инициализация телефонного справочника
   const init = (selectorApp, title) => {
     const app = document.querySelector(selectorApp);
     const phoneBook = renderPhoneBook(app, title);
-    const {list, logo, btnAdd, formOverlay, form} = phoneBook;
+    const {
+      list,
+      logo,
+      btnAdd,
+      btnDel,
+      formOverlay
+      //form
+    } = phoneBook;
+
+    const buttonSortedForName = document.querySelector('.button-name');
+    const buttonSortedForSurname = document.querySelector('.button-surname');
+
+    buttonSortedForName.addEventListener('click', () => {
+      phoneSorted(data, 'name');
+      list.innerHTML = '';
+      const allRow = renderContacts(list, data);
+      hoverRow(allRow, logo);
+    });
+
+    buttonSortedForSurname.addEventListener('click', () => {
+      phoneSorted(data, 'surname');
+      list.innerHTML = '';
+      const allRow = renderContacts(list, data);
+      hoverRow(allRow, logo);
+    });
 
     const allRow = renderContacts(list, data);
     hoverRow(allRow, logo);
@@ -237,15 +294,35 @@ import data from './data.js';
       formOverlay.classList.add('is-visible');
     });
 
-    form.addEventListener('click', (e) => {
-      e.stopPropagation();
-    })
-
-    formOverlay.addEventListener('click', () => {
-      formOverlay.classList.remove('is-visible');
+    formOverlay.addEventListener('click', (e) => {
+      const target = e.target;
+      if (target == formOverlay ||
+          target.classList.contains('close')) {
+        formOverlay.classList.remove('is-visible');
+      }
     });
 
+    btnDel.addEventListener('click', () => {
+      document.querySelectorAll('.delete').forEach(del => {
+        del.classList.toggle('is-visible');
+      });
+    });
 
+    list.addEventListener('click', (e) => {
+      const target = e.target;
+      if (target.closest('.del-icon')) {
+        target.closest('.contact').remove();
+      }
+    });
+
+    // setTimeout(() => {
+    //   const contact = createRow({
+    //     name: 'Катя'б,
+    //     surname: 'Козлова',
+    //     phone: '12345678',
+    //   });
+    //   list.append(contact);
+    // }, 2000);
   };
 
   window.phoneBookInit = init;
