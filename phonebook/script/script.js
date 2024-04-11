@@ -83,6 +83,7 @@ import data from './data.js';
         <th class='button-name'>Имя</th>
         <th class='button-surname'>Фамилия</th>
         <th>Номер телефона</th>
+        <th></th>
       </tr>
     `);
 
