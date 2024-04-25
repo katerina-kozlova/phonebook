@@ -1,5 +1,3 @@
-'use strict';
-
 import { createHeader } from './createElemets/createHeader.js';
 import { createLogo } from './createElemets/createLogo.js';
 import { createMain } from './createElemets/createMain.js';

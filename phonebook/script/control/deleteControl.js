@@ -1,6 +1,4 @@
-'use strict';
-
-import { removeStorage } from '../removeStorage.js';
+import { removeStorage } from '../localStorage/removeStorage.js';
 
 export const deleteControl = (btnDel, list) => {
     // По клику на кнопку "Удалить" показать все кнопки "х" рядом с контактами

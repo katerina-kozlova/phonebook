@@ -1,5 +1,3 @@
-'use strict';
-
 import data from './data.js';
 import { modalControl } from './control/modalControl.js';
 import { deleteControl } from './control/deleteControl.js';
@@ -7,7 +5,7 @@ import { formControl } from './control/formControl.js';
 import { hoverRow } from './hoverRow.js';
 import { phoneSorted } from './phoneSorted.js';
 import { renderContacts } from './renderContacts.js';
-import { renderPhoneBook } from './renderPhoneBook.js';
+import * as render from './renderPhoneBook.js';
 
 // Инициализация телефонного справочника
 const init = (selectorApp, title) => {
@@ -19,7 +17,7 @@ const init = (selectorApp, title) => {
     btnDel,
     formOverlay,
     form
-  } = renderPhoneBook(app, title);
+  } = render.renderPhoneBook(app, title);
 
   const buttonSortedForName = document.querySelector('.button-name');
   const buttonSortedForSurname = document.querySelector('.button-surname');
@@ -55,5 +53,3 @@ const init = (selectorApp, title) => {
 };
 
 init('#app', 'Катя');
-
-  //window.phoneBookInit = init;

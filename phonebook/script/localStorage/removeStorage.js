@@ -1,5 +1,3 @@
-'use strict';
-
 export const removeStorage = (num) => {
     console.log(`num`, num);
     // Получить массив контактов из localStorage

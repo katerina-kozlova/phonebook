@@ -1,5 +1,3 @@
-'use strict';
-
 // Отсортировать в алфавитном порядке контакты
 export const phoneSorted = (arr, key) => {
     arr.sort((a, b) => {

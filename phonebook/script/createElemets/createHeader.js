@@ -1,5 +1,3 @@
-'use strict';
-
 import { createContainer } from "./createContainer.js";
 
 // Создать контейнер-хэдер и сам хэдер

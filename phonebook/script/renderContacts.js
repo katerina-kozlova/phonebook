@@ -1,7 +1,5 @@
-'use strict';
-
 import { createRow } from './createElemets/createRow.js';
-import { getStorage } from './getStorage.js';
+import { getStorage } from './localStorage/getStorage.js';
 
 // Добавить контакты из имеющегося массива
 export const renderContacts = (elem, data) => {

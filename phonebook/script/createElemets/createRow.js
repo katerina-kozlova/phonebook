@@ -1,5 +1,3 @@
-'use strict';
-
 // Создать строки контактов в таблице
 export const createRow = ({name: firstName, surname, phone}) => {
     const tr = document.createElement('tr');

@@ -1,8 +1,5 @@
-'use strict';
-
 import { addContactData } from '../addContactData.js';
 import { addContactPage } from '../addContactPage.js';
-import { modalControl } from './modalControl.js';
 
 export const formControl = (form, list, closeModal, btnAdd) => {
     form.addEventListener('submit', (e) => {
@@ -12,8 +9,6 @@ export const formControl = (form, list, closeModal, btnAdd) => {
       addContactPage(newContact, list);
       addContactData(newContact);
       form.reset();
-      //const {closeModal} = modalControl(btnAdd, formOverlay);
       closeModal();
-      //modalControl();
     });
 };

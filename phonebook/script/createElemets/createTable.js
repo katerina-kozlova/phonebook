@@ -1,5 +1,3 @@
-'use strict';
-
 // Создать верстку таблицы и названия ячеек
 export const createTable = () => {
     const table = document.createElement('table');

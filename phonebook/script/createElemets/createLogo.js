@@ -1,5 +1,3 @@
-'use strict';
-
 // Создать логотип, в названии которого имя пользователя при инициализации 
 export const createLogo = (title) => {
     const h1 = document.createElement('h1');

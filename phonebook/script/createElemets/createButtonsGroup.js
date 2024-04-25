@@ -1,5 +1,3 @@
-'use strict';
-
 // Создать группу кнопок
 export const createButtonsGroup = (params) => {
     // Создать контейнер с кнопками

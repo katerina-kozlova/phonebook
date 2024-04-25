@@ -1,5 +1,3 @@
-'use strict';
-
 import { getStorage } from "./getStorage.js";
 
 export const setStorage = (key, obj) => {

@@ -1,5 +1,3 @@
-'use strict';
-
 // Показать телефон контакта при наведении мыши
 export const hoverRow = (allRow, logo) => {
     const text = logo.textContent;

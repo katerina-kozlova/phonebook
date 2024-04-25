@@ -1,5 +1,3 @@
-'use strict';
-
 export const modalControl = (btnAdd, formOverlay) => {
     const openModal = () => {
       formOverlay.classList.add('is-visible');

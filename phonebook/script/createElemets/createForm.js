@@ -1,5 +1,3 @@
-'use strict';
-
 import { createButtonsGroup } from "./createButtonsGroup.js";
 
 // Создать форму и верстку формы для добьавления нового контакта пользователем

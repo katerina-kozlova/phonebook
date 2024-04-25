@@ -1,5 +1,3 @@
-'use strict';
-
 export const getStorage = (key) => {
     const getData = localStorage.getItem(key);
     if (getData) {
