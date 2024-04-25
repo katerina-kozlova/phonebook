@@ -76,6 +76,7 @@
         "checkLoops": false
       }
     ],
+    "sourceType": "module",
     "no-useless-concat": [
       "error"
     ],
